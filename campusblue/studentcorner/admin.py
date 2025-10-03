@@ -64,7 +64,8 @@ class StudentAdmin(admin.ModelAdmin):
 class CertificateAdmin(admin.ModelAdmin):
     list_display = ['certificate_number', 'get_student_name', 'get_registration_no', 'certificate_type', 'issue_date']
     list_filter = ['certificate_type', 'issue_date']
-    search_fields = ['certificate_number', 'student__student_name', 'student__registration_no']
+    search_fields = ['certificate_number', 'student__student_name', 'student__u_registration_no']
+    fields = ['student', 'certificate_type', 'certificate_number', 'issue_date', 'purpose', 'remarks', 'issued_by']
     
     def get_student_name(self, obj):
         return obj.student.student_name
@@ -72,6 +73,7 @@ class CertificateAdmin(admin.ModelAdmin):
     get_student_name.admin_order_field = 'student__student_name'
     
     def get_registration_no(self, obj):
-        return obj.student.registration_no
+        return obj.student.u_registration_no
     get_registration_no.short_description = 'Registration No'
-    get_registration_no.admin_order_field = 'student__registration_no'
+    get_registration_no.admin_order_field = 'student__u_registration_no'
+
