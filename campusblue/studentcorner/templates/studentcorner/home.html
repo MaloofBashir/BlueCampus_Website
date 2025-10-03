@@ -1,0 +1,49 @@
+{% extends 'studentcorner/base.html' %}
+
+<!-- {% block title %}Home - GDC Zainapora{% endblock %} -->
+
+{% block content %}
+<section class="text-center text-white hero-section py-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Welcome to <span class="text-warning">GDC Zainapora BlueCampus</span></h1>
+        <p class="lead my-4">Manage students, issue documents, and handle all college operations in one place.</p>
+
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card card-hover h-100 border-0 shadow-sm rounded-4">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-primary">Student Management</h5>
+                        <p class="card-text">Maintain detailed student records from admissions to graduation easily.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'bonafide' %}" class="text-decoration-none">
+                    <div class="card card-hover h-100 border-0 shadow-sm rounded-4">
+                        <div class="card-body text-center">
+                            <h5 class="card-title text-primary">Document Issuance</h5>
+                            <p class="card-text">Generate and issue bonafides, certificates, etc.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'bonafide' %}" class="text-decoration-none">
+                    <div class="card card-hover h-100 border-0 shadow-sm rounded-4">
+                        <div class="card-body text-center">
+                            <h5 class="card-title text-primary">Admin Dashboard</h5>
+                            <p class="card-text">Powerful tools for staff to monitor activities, analytics, and
+                                approvals.
+                            </p>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

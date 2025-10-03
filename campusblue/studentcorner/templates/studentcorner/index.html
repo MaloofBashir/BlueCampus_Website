@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GDC Zainapora Portal</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+            /* grow to fill space */
+        }
+
+        .card-hover {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-section {
+            background: linear-gradient(to right, #0d6efd, #3a8dde);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">GDC Zainapora</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Students</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Documents</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="d-flex flex-column">
+
+        <!-- Hero Section -->
+        <section class="text-center text-white hero-section py-5">
+            <div class="container">
+                <h1 class="display-4 fw-bold">Welcome to <span class="text-warning">GDC Zainapora CampusBlue</span></h1>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-5 bg-light flex-grow-1">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card card-hover h-100 border-0 shadow-sm rounded-4">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-primary">Student Management</h5>
+                                <p class="card-text">Maintain detailed student records </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-hover h-100 border-0 shadow-sm rounded-4">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-primary">Document Issuance</h5>
+                                <p class="card-text">Issuance of Bonafide Certificate and Character/Discharge.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-hover h-100 border-0 shadow-sm rounded-4">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-primary">Admin Dashboard</h5>
+                                <p class="card-text">Powerful tools for staff to monitor activities, analytics, and
+                                    approvals.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-center text-white py-4">
+        <p class="mb-0">© 2025 GDC Zainapora. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
