@@ -1,0 +1,208 @@
+{% extends 'studentcorner/base.html' %}
+
+{% block title %}Student Statistics - GDC Zainapora{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold text-primary">Student Statistics Dashboard</h1>
+            <p class="lead">Detailed subject-wise enrollment statistics</p>
+        </div>
+    </div>
+
+    <!-- Overall Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="text-primary">{{ total_students }}</h3>
+                    <p class="text-muted mb-0">Total Active Students</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="text-info">{{ male_students }}</h3>
+                    <p class="text-muted mb-0">Male Students</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="text-success">{{ female_students }}</h3>
+                    <p class="text-muted mb-0">Female Students</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="text-warning">{{ semester_enrollment.count }}</h3>
+                    <p class="text-muted mb-0">Active Enrollments</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Type Summary -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Course Type Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Course Type</th>
+                                    <th class="text-center">Total Enrollments</th>
+                                    <th class="text-center">Male</th>
+                                    <th class="text-center">Female</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for course in course_type_summary %}
+                                <tr>
+                                    <td>{{ course.name }}</td>
+                                    <td class="text-center fw-bold">{{ course.total }}</td>
+                                    <td class="text-center text-info">{{ course.male }}</td>
+                                    <td class="text-center text-success">{{ course.female }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Subject-wise Breakdown -->
+    <div class="row">
+        {% for course_field, course_data in course_type_details.items %}
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header 
+                    {% if course_field == 'major_course' %}bg-warning text-dark
+                    {% elif course_field == 'minor_course' %}bg-info text-white
+                    {% elif course_field == 'md1' %}bg-secondary text-white
+                    {% elif course_field == 'md2' %}bg-dark text-white
+                    {% else %}bg-light text-dark{% endif %}">
+                    <h5 class="mb-0">
+                        {{ course_data.display_name }}
+                        <span class="badge bg-white text-dark ms-2">{{ course_data.total_enrollments }}
+                            enrollments</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if course_data.subjects %}
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Subject Code</th>
+                                    <th>Subject Name</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center">Male</th>
+                                    <th class="text-center">Female</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for subject in course_data.subjects %}
+                                <tr>
+                                    <td class="fw-bold">
+                                        {{
+                                        subject.major_course__subject_code|default:subject.minor_course__subject_code|default:subject.md1__subject_code|default:subject.md2__subject_code|default:subject.skill__subject_code|default:subject.vac1__subject_code|default:subject.vac2__subject_code|default:subject.aec__subject_code
+                                        }}
+                                    </td>
+                                    <td>
+                                        {{
+                                        subject.major_course__subject_name|default:subject.minor_course__subject_name|default:subject.md1__subject_name|default:subject.md2__subject_name|default:subject.skill__subject_name|default:subject.vac1__subject_name|default:subject.vac2__subject_name|default:subject.aec__subject_name
+                                        }}
+                                    </td>
+                                    <td class="text-center fw-bold">{{ subject.total_students }}</td>
+                                    <td class="text-center text-info">{{ subject.male_students }}</td>
+                                    <td class="text-center text-success">{{ subject.female_students }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center text-muted py-3">
+                        <i class="fas fa-info-circle fa-2x mb-2"></i>
+                        <p>No enrollment data available for {{ course_data.display_name }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Semester-wise Enrollment -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Semester-wise Enrollment</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Semester</th>
+                                    <th class="text-center">Total Students</th>
+                                    <th class="text-center">Male</th>
+                                    <th class="text-center">Female</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for semester in semester_enrollment %}
+                                <tr>
+                                    <td class="fw-bold">{{ semester.semester__semester_name }}</td>
+                                    <td class="text-center">{{ semester.total }}</td>
+                                    <td class="text-center text-info">{{ semester.male }}</td>
+                                    <td class="text-center text-success">{{ semester.female }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">No enrollment data available</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+    }
+
+    .table th {
+        border-top: none;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .table td {
+        font-size: 0.85rem;
+    }
+</style>
+{% endblock %}

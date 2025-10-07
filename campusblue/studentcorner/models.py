@@ -63,7 +63,7 @@ class Student(models.Model):
     
     # Primary identifiers (these remain constant throughout student's college life)
     reg_form_no = models.CharField(max_length=50, unique=True)
-    u_registration_no = models.CharField(max_length=50, unique=True)
+    u_registration_no = models.CharField(max_length=50, unique=True,null=True)
     class_roll_no=models.CharField(max_length=15,unique=True)
     
     # Course details (constant)
@@ -161,6 +161,7 @@ class Certificate(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='certificates')
     student_semester = models.ForeignKey(StudentSemester, on_delete=models.SET_NULL, null=True, blank=True, related_name='certificates')
     certificate_type = models.CharField(max_length=50, choices=CERTIFICATE_TYPE_CHOICES)
+
     
     # Certificate details
     certificate_number = models.CharField(max_length=100, unique=True, null=True, blank=True)
@@ -170,6 +171,43 @@ class Certificate(models.Model):
     purpose = models.TextField(null=True, blank=True)
     remarks = models.TextField(null=True, blank=True)
     issued_by = models.CharField(max_length=200, null=True, blank=True)
+
+    final_year = models.CharField(max_length=20, null=True, blank=True)
+    cgpa = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    division = models.CharField(max_length=50, null=True, blank=True)
+    hard_copy_issued = models.BooleanField(default=False)
+    hard_copy_collected_by = models.CharField(max_length=200, null=True, blank=True)
+    hard_copy_collection_date = models.DateField(null=True, blank=True)
+
+    def can_issue_certificate(cls, student, certificate_type):
+        """Check if certificate can be issued"""
+        rules = {
+            'bonafide': {'max_count': None, 'wait_days': 180},
+            'degree': {'max_count': 1, 'wait_days': None},
+            'marks_card': {'max_count': 1, 'wait_days': None},
+            'character': {'max_count': 1, 'wait_days': None},
+        }
+        
+        rule = rules.get(certificate_type)
+        if not rule:
+            return False, "Invalid certificate type", None
+        
+        existing = cls.objects.filter(student=student, certificate_type=certificate_type).order_by('-issue_date')
+        
+        # Check lifetime limit
+        if rule['max_count'] and existing.count() >= rule['max_count']:
+            last_cert = existing.first()
+            return False, f"Already issued on {last_cert.issue_date}. Can only be issued once.", last_cert
+        
+        # Check time gap
+        if rule['wait_days'] and existing.exists():
+            last_cert = existing.first()
+            days_since = (timezone.now().date() - last_cert.issue_date).days
+            if days_since < rule['wait_days']:
+                remaining = rule['wait_days'] - days_since
+                return False, f"Wait {remaining} more days", last_cert
+        
+        return True, "Can issue", None
     
     # Timestamps
     created_at = models.DateTimeField(default=timezone.now)
@@ -192,3 +230,13 @@ class StudentSubjectEnrollment(models.Model):
     class Meta:
         db_table = 'student_subject_enrollments'
         unique_together = [['student_semester', 'subject']]
+
+
+# Add these fields to your Certificate model
+final_year = models.CharField(max_length=20, null=True, blank=True)
+cgpa = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+division = models.CharField(max_length=50, null=True, blank=True)
+hard_copy_issued = models.BooleanField(default=False)
+hard_copy_collected_by = models.CharField(max_length=200, null=True, blank=True)
+hard_copy_collection_date = models.DateField(null=True, blank=True)
+
